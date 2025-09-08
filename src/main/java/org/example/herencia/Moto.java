@@ -14,4 +14,9 @@ public class Moto extends Vehiculo {
     public int getCilindrada() {
         return cilindrada;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Cilindrada: " + cilindrada + "cc";
+    }
 }

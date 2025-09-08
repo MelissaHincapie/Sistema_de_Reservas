@@ -13,4 +13,8 @@ public class Camioneta extends Vehiculo {
     public double getCapacidadCarga() {
         return capacidadCarga;
     }
+
+    public String toString() {
+        return super.toString() + " | Capacidad carga: " + capacidadCarga + "kg";
+    }
 }

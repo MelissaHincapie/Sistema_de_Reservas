@@ -5,25 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente {
-    private int idCliente;
+    private String idCliente;
     private String nombre;
     private List<Reserva> reservas = new ArrayList<>();
 
-    public Cliente (int idCliente, String nombre){
+    public Cliente (String idCliente, String nombre){
         this.idCliente = idCliente;
         this.nombre = nombre;
     }
 
-    public int getIdCliente() {
-
-        return idCliente;
-    }
-
-    public String getNombre() {
-
-        return nombre;
-    }
-
+    public String getIdCliente() {return idCliente;}
+    public String getNombre() {return nombre;}
     public List<Reserva> getReservas() {
         return reservas;
     }
@@ -36,11 +28,14 @@ public class Cliente {
         boolean tieneActiva = reservas.stream()
                 .anyMatch(r -> r.isConfirmada());
         if (tieneActiva) {
-            throw new IllegalStateException("El cliente ya tiene una reserva activa")
+            throw new IllegalStateException("El cliente ya tiene una reserva activa");
         }
-        Reserva reserva = new Reserva("R-" + (reservas.size() + 1), this, vehiculo, fechaInicio, fechaFin, seguro, gps);
+        Reserva reserva = new Reserva(this, vehiculo, fechaInicio, fechaFin, seguro, gps);
         reservas.add(reserva);
         reserva.confirmarReserva();
+    }
 
+    public boolean tieneReservaActiva() {
+        return reservas.stream().anyMatch(r -> r.isConfirmada());
     }
 }

@@ -13,4 +13,9 @@ public class Autobus extends Vehiculo {
     public int getCapacidadPasajeros() {
         return capacidadPasajeros;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Pasajeros: " + capacidadPasajeros;
+    }
 }

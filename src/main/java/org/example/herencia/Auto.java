@@ -13,4 +13,9 @@ public class Auto extends Vehiculo {
     public String getTipoCombustible() {
         return tipoCombustible;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Combustible: " + tipoCombustible;
+    }
 }
