@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente {
-    protected int idCliente;
-    protected String nombre;
-    protected List<Reserva> reservas = new ArrayList<>();
+    private int idCliente;
+    private String nombre;
+    private List<Reserva> reservas = new ArrayList<>();
 
     public Cliente (int idCliente, String nombre){
         this.idCliente = idCliente;
@@ -27,7 +27,6 @@ public class Cliente {
     public List<Reserva> getReservas() {
         return reservas;
     }
-
 
 
     public void reservarVehiculo (Vehiculo vehiculo, LocalDate fechaInicio, LocalDate fechaFin, boolean seguro, boolean gps){

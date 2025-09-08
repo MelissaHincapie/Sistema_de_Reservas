@@ -1,15 +1,16 @@
 package org.example.modelos;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Reserva {
-    protected String idReserva;
-    protected Cliente cliente;
-    protected Vehiculo vehiculo;
-    protected LocalDate fechaInicio;
-    protected LocalDate fechaFin;
-    protected double costoTotal;
-    protected boolean confirmada;
+    private final String idReserva;
+    private Cliente cliente;
+    private Vehiculo vehiculo;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+    private double costoTotal;
+    private boolean confirmada;
 
     public Reserva(String idReserva, Cliente cliente, Vehiculo vehiculo, LocalDate fechaInicio, LocalDate fechaFin, boolean seguro, boolean gps) {
         this.idReserva = idReserva;
@@ -17,9 +18,12 @@ public class Reserva {
         this.vehiculo = vehiculo;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        long dias = chronoUnit.DAYS.between(fechaInicio, fechaFin);
+
+        //Calcula la diración en días de la reserva
+        long dias = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
         this.costoTotal = vehiculo.calcularPrecio((int) dias, seguro, gps);
     }
+
 
     public void confirmarReserva(){
         vehiculo.setDisponible(false);

@@ -3,7 +3,7 @@ package org.example.herencia;
 import org.example.modelos.Vehiculo;
 
 public class Auto extends Vehiculo {
-    protected String tipoCombustible;
+    private String tipoCombustible;
 
     public Auto(String idVehiculo, String marca, String modelo, int anno, double costoDiario, String tipoCombustible) {
         super(idVehiculo, marca, modelo, anno, costoDiario);

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Administrador {
-    protected List<Vehiculo> flota = new ArrayList<>();
+    private List<Vehiculo> flota = new ArrayList<>();
 
 
     public void añadirVehiculo(Vehiculo vehiculo){
