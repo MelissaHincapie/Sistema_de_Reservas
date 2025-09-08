@@ -33,12 +33,14 @@ public class Cliente {
         if (!vehiculo.isDisponible()) {
             throw new IllegalStateException("El vehículo no esta disponible");
         }
+        boolean tieneActiva = reservas.stream()
+                .anyMatch(r -> r.isConfirmada());
+        if (tieneActiva) {
+            throw new IllegalStateException("El cliente ya tiene una reserva activa")
+        }
         Reserva reserva = new Reserva("R-" + (reservas.size() + 1), this, vehiculo, fechaInicio, fechaFin, seguro, gps);
         reservas.add(reserva);
         reserva.confirmarReserva();
 
-
-//        Crea una reserva para el cliente si el
-//        vehículo está disponible y lo añade a la lista de reservas.
     }
 }

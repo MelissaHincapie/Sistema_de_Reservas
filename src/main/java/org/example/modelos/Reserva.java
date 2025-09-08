@@ -24,10 +24,23 @@ public class Reserva {
         this.costoTotal = vehiculo.calcularPrecio((int) dias, seguro, gps);
     }
 
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
 
     public void confirmarReserva(){
         vehiculo.setDisponible(false);
         confirmada = true;
+    }
+
+    public boolean isConfirmada() {
+        return confirmada;
     }
 
     public double getCostoTotal() {
