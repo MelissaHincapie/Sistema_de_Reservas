@@ -13,7 +13,7 @@ public class Administrador {
     private List<Vehiculo> flota = new ArrayList<>();
 
 
-    public void añadirVehiculo(Vehiculo vehiculo){
+    public void aniadirVehiculo(Vehiculo vehiculo){
         boolean existe = flota.stream()
                 .anyMatch(v -> v.getIdVehiculo().equals(vehiculo.getIdVehiculo()));
 
@@ -74,10 +74,11 @@ public class Administrador {
         System.out.println("\n--- Flota completa ---");
         for (Vehiculo v : flota) {
             if (v.isDisponible()) {
-                System.out.println("✅ " + v);
+                System.out.println(v);
             } else {
-                System.out.println("❌ " + v + " (NO disponible)");
+                System.out.println(v + " (NO disponible)");
             }
         }
     }
+
 }

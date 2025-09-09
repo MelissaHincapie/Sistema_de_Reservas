@@ -3,120 +3,294 @@ import org.example.modelos.*;
 import org.example.herencia.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
+
+
 public class Main {
     private static final Administrador admin = new Administrador();
     private static final Scanner leer = new Scanner(System.in);
-
     private static final List<Cliente> clientes = new ArrayList<>();
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
 
     public static void main(String[] args) {
         datosIniciales();
 
         boolean salir = false;
 
-
         while (!salir) {
-            System.out.println("\n ---------Gestión de Reservas---------");
-            System.out.println("1. Añadir vehículo");
-            System.out.println("2. Listar vehículos disponibles");
-            System.out.println("3. Resgitrar cliente y reservar");
-            System.out.println("4. Lista de reservas");
-            System.out.println("5. Lista de flota completa");
-            System.out.println("6. Salir");
-            System.out.println("Elige una opción");
+            System.out.println("\nIngresar como:");
+            System.out.println("1. Cliente");
+            System.out.println("2. Administrador");
+            System.out.println("3. Salir");
+            System.out.print("Elige una opción: ");
 
-            int opcion = leer.nextInt();
-            leer.nextLine();
+            try {
+                int rol = leer.nextInt();
+                leer.nextLine();
 
-
-            switch (opcion) {
-                case 1: {
-                    añadirVehiculo();
-                    break;
+                switch (rol) {
+                    case 1:
+                        menuCliente();
+                        break;
+                    case 2:
+                        menuAdmin();
+                        break;
+                    case 3:
+                        salir = true;
+                        System.out.println("Gracias por utilizar nuestro sistema de reservas");
+                        break;
+                    default:
+                        System.out.println("Opción no válida. Intente nuevamente.");
                 }
-                case 2: {
-                    listarVehiculos();
-                    break;
-                }
-                case 3: {
-                    reservarVehiculo();
-                    break;
-                }
-                case 4: {
-                    admin.listarReservas(clientes);
-                    break;
-                }
-                case 5: {
-                    admin.listarTodosLosVehiculos();
-                    break;
-                }
-                case 6: {
-                    salir = true;
-                    break;
-                }
-                default:
-                    System.out.println("Opción inválida.");
+            } catch (InputMismatchException e) {
+                System.out.println("Error: Debe ingresar un número válido.");
+                leer.nextLine();
             }
         }
-        System.out.println("Gracias por utilizar nuestro sistema de reservas");
     }
 
-    private static void añadirVehiculo() {
-        System.out.println("---------Añadir vehículo---------");
-        System.out.println("tipo : \n1. Auto \n2. Moto \n3. Camioneta \n4. Autobús");
-        int tipo = leer.nextInt();
-        leer.nextLine();
+    //Menu Cliente
+    private static void menuCliente() {
+        boolean salir = false;
+        while (!salir) {
+            System.out.println("\n ---------Gestión de Reservas---------");
+            System.out.println("1. Ver lista de vehículos disponibles");
+            System.out.println("2. Reservar");
+            System.out.println("3. Salir");
+            System.out.println("Elige una opción");
 
-        System.out.print("ID: ");
-        String id = leer.nextLine();
+            try {
+                int opcion = leer.nextInt();
+                leer.nextLine();
+
+                switch (opcion) {
+                    case 1:
+                        listarVehiculos();
+                        break;
+                    case 2:
+                        reservarVehiculo();
+                        break;
+                    case 3:
+                        salir = true;
+                        break;
+                    default:
+                        System.out.println("Opción inválida. Intente nuevamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Error: Debe ingresar un número válido.");
+                leer.nextLine(); // Limpiar buffer
+            }
+        }
+    }
+
+    //Menu Admin
+    private static void menuAdmin() {
+        boolean salir = false;
+        while (!salir) {
+            System.out.println("\n--- Menú ---");
+            System.out.println("1. Añadir vehículo");
+            System.out.println("2. Listar vehículos disponibles");
+            System.out.println("3. Lista de reservas");
+            System.out.println("4. Lista de flota completa");
+            System.out.println("5. Salir");
+            System.out.println("Elige una opción");
+
+            try {
+                int opcion = leer.nextInt();
+                leer.nextLine();
+
+                switch (opcion) {
+                    case 1:
+                        aniadirVehiculo();
+                        break;
+                    case 2:
+                        listarVehiculos();
+                        break;
+                    case 3:
+                        admin.listarReservas(clientes);
+                        break;
+                    case 4:
+                        admin.listarTodosLosVehiculos();
+                        break;
+                    case 5:
+                        salir = true;
+                        break;
+                    default:
+                        System.out.println("Opción inválida. Intente nuevamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Error: Debe ingresar un número válido.");
+                leer.nextLine(); // Limpiar buffer
+            }
+        }
+    }
+
+    private static void aniadirVehiculo() {
+        int tipo = 0;
+        boolean tipoValido = false;
+        while (!tipoValido) {
+            System.out.println("Seleccione el tipo de vehículo:");
+            System.out.println("1. Auto");
+            System.out.println("2. Moto");
+            System.out.println("3. Camioneta");
+            System.out.println("4. Autobús");
+            System.out.print("Opción: ");
+
+            try {
+                tipo = leer.nextInt();
+                leer.nextLine();
+                if (tipo >= 1 && tipo <= 4) {
+                    tipoValido = true;
+                } else {
+                    System.out.println("Opción no válida. Intente nuevamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Error: Debe ingresar un número válido.");
+                leer.nextLine();
+            }
+        }
+
+        // Solicitar datos comunes
+        String id = "";
+        boolean idValido = false;
+        while (!idValido) {
+            System.out.print("ID (obligatorio): ");
+            id = leer.nextLine().trim();
+
+            if (id.isEmpty()) {
+                System.out.println("Error: El ID es obligatorio. Por favor, ingrese un ID.");
+                continue;
+            }
+            idValido = true;
+        }
+
         System.out.print("Marca: ");
-        String marca = leer.nextLine();
+        String marca = leer.nextLine().trim();
         System.out.print("Modelo: ");
-        String modelo = leer.nextLine();
-        System.out.print("Año: ");
-        int anno = leer.nextInt();
-        System.out.print("Costo diario: ");
-        double costo = leer.nextDouble();
-        leer.nextLine();
+        String modelo = leer.nextLine().trim();
 
+        int anno = 0;
+        boolean annoValido = false;
+        while (!annoValido) {
+            System.out.print("Año: ");
+            try {
+                anno = leer.nextInt();
+                leer.nextLine();
+                if (anno > 1900 && anno <= LocalDate.now().getYear() + 1) {
+                    annoValido = true;
+                } else {
+                    System.out.println("Año no válido. Intente nuevamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Error: Debe ingresar un número válido.");
+                leer.nextLine();
+            }
+        }
+
+        double costo = 0;
+        boolean costoValido = false;
+        while (!costoValido) {
+            System.out.print("Costo diario: ");
+            try {
+                costo = leer.nextDouble();
+                leer.nextLine();
+                if (costo > 0) {
+                    costoValido = true;
+                } else {
+                    System.out.println("El costo debe ser mayor a cero.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Error: Debe ingresar un número válido.");
+                leer.nextLine();
+            }
+        }
+
+        // Crear vehículo según tipo
         Vehiculo v = null;
         switch (tipo) {
             case 1: {
-                System.out.println("Tipo de conbustible:");
-                String combustible = leer.nextLine();
+                System.out.print("Tipo de combustible: ");
+                String combustible = leer.nextLine().trim();
                 v = new Auto(id, marca, modelo, anno, costo, combustible);
                 break;
             }
             case 2: {
-                System.out.println("Cilindrada (cc): ");
-                int cc = leer.nextInt();
+                int cc = 0;
+                boolean ccValido = false;
+                while (!ccValido) {
+                    System.out.print("Cilindrada (cc): ");
+                    try {
+                        cc = leer.nextInt();
+                        leer.nextLine();
+                        if (cc > 0) {
+                            ccValido = true;
+                        } else {
+                            System.out.println("La cilindrada debe ser mayor a cero.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Error: Debe ingresar un número válido.");
+                        leer.nextLine();
+                    }
+                }
                 v = new Moto(id, marca, modelo, anno, costo, cc);
                 break;
             }
             case 3: {
-                System.out.println("Capacidad de carga (Kg): ");
-                double carga = leer.nextDouble();
+                double carga = 0;
+                boolean cargaValida = false;
+                while (!cargaValida) {
+                    System.out.print("Capacidad de carga (Kg): ");
+                    try {
+                        carga = leer.nextDouble();
+                        leer.nextLine();
+                        if (carga > 0) {
+                            cargaValida = true;
+                        } else {
+                            System.out.println("La capacidad debe ser mayor a cero.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Error: Debe ingresar un número válido.");
+                        leer.nextLine();
+                    }
+                }
                 v = new Camioneta(id, marca, modelo, anno, costo, carga);
                 break;
             }
             case 4: {
-                System.out.println("Capacidad de pasajeros: ");
-                int pasajeros = leer.nextInt();
+                int pasajeros = 0;
+                boolean pasajerosValido = false;
+                while (!pasajerosValido) {
+                    System.out.print("Capacidad de pasajeros: ");
+                    try {
+                        pasajeros = leer.nextInt();
+                        leer.nextLine();
+                        if (pasajeros > 0) {
+                            pasajerosValido = true;
+                        } else {
+                            System.out.println("La capacidad debe ser mayor a cero.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Error: Debe ingresar un número válido.");
+                        leer.nextLine();
+                    }
+                }
                 v = new Autobus(id, marca, modelo, anno, costo, pasajeros);
                 break;
             }
-            default:
-                System.out.println("Tipo no válido");
-
         }
+
         if (v != null) {
-            admin.añadirVehiculo(v);
-            System.out.println(" Vehículo añadido: " + v);
+            admin.aniadirVehiculo(v);
+            System.out.println("Vehículo añadido exitosamente: " + v);
+        } else {
+            System.out.println("Error al añadir el vehículo.");
         }
     }
 
@@ -125,11 +299,14 @@ public class Main {
     }
 
     private static void reservarVehiculo() {
-        System.out.println("---------Reserva---------");
-        System.out.println("ID cliente: ");
-        String idC = leer.nextLine();
-        System.out.println("Nombre: ");
-        String nombreC = leer.nextLine();
+        System.out.println("\n--- Realizar Reserva ---");
+
+        // Obtener o crear cliente
+        System.out.print("ID del cliente: ");
+        String idC = leer.nextLine().trim();
+        System.out.print("Nombre del cliente: ");
+        String nombreC = leer.nextLine().trim();
+
         Cliente cliente = clientes.stream()
                 .filter(c -> c.getIdCliente().equals(idC))
                 .findFirst()
@@ -138,48 +315,76 @@ public class Main {
         if (cliente == null) {
             cliente = new Cliente(idC, nombreC);
             clientes.add(cliente);
+            System.out.println("Nuevo cliente registrado: " + nombreC);
         }
 
+        // Verificar si tiene reserva activa
         if (cliente.tieneReservaActiva()) {
             System.out.println("El cliente ya tiene una reserva activa y no puede hacer otra.");
             return;
         }
 
+        // Mostrar vehículos disponibles
         listarVehiculos();
-        System.out.println("Ingrese el ID del vehículo a reservar: ");
-        String idV = leer.nextLine().trim();
-
-        Vehiculo elegido = admin.getDisponibles().stream()
-                .filter(v -> v.getIdVehiculo().equals(idV))
-                .findFirst().orElse(null);
-
-        if (elegido == null) {
-            System.out.println("Vehículo no encontrado o no disponibles");
+        if (admin.getDisponibles().isEmpty()) {
+            System.out.println("No hay vehículos disponibles para reservar.");
             return;
         }
 
-        System.out.println("Días de alquiler");
-        int dias = leer.nextInt();
-        leer.nextLine();
+        // Seleccionar vehículo
+        System.out.print("Ingrese el ID del vehículo a reservar: ");
+        String idV = leer.nextLine().trim();
 
-        LocalDate inicio = LocalDate.now();
-        LocalDate fin = inicio.plusDays(dias);
+        Vehiculo elegido = admin.getDisponibles().stream()
+                .filter(v -> v.getIdVehiculo().equalsIgnoreCase(idV))
+                .findFirst().orElse(null);
 
-        System.out.print("¿Seguro? (s/n): ");
+        if (elegido == null) {
+            System.out.println("Vehículo no encontrado o no disponible.");
+            return;
+        }
+
+        // Solicitar fechas
+        LocalDate inicio = null;
+        LocalDate fin = null;
+        boolean fechasValidas = false;
+
+        while (!fechasValidas) {
+            try {
+                System.out.print("Fecha de inicio (dd/MM/yyyy): ");
+                String fechaInicioStr = leer.nextLine().trim();
+                inicio = LocalDate.parse(fechaInicioStr, dateFormatter);
+
+                System.out.print("Fecha de fin (dd/MM/yyyy): ");
+                String fechaFinStr = leer.nextLine().trim();
+                fin = LocalDate.parse(fechaFinStr, dateFormatter);
+
+                if (inicio.isBefore(fin) && !inicio.isBefore(LocalDate.now())) {
+                    fechasValidas = true;
+                } else {
+                    System.out.println("Error: La fecha de inicio debe ser hoy o posterior, y la fecha de fin debe ser posterior a la de inicio.");
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de fecha incorrecto. Use el formato dd/MM/yyyy.");
+            }
+        }
+
+        // Solicitar servicios adicionales
+        System.out.print("¿Incluir seguro? (s/n): ");
         boolean seguro = leer.nextLine().equalsIgnoreCase("s");
-        System.out.print("¿GPS? (s/n): ");
+        System.out.print("¿Incluir GPS? (s/n): ");
         boolean gps = leer.nextLine().equalsIgnoreCase("s");
 
         try {
             Reserva reservaTemp = new Reserva(cliente, elegido, inicio, fin, seguro, gps);
-            System.out.println("\n--- Resumen de reserva ---");
+            System.out.println("\n--- RESUMEN DE RESERVA ---");
             System.out.println(reservaTemp);
 
             System.out.print("\n¿Confirmar reserva? (s/n): ");
             if (leer.nextLine().equalsIgnoreCase("s")) {
                 cliente.getReservas().add(reservaTemp);
                 reservaTemp.confirmarReserva();
-                System.out.println("Reserva confirmada.");
+                System.out.println("Reserva confirmada exitosamente.");
             } else {
                 System.out.println("Reserva cancelada.");
             }
@@ -212,22 +417,22 @@ public class Main {
         Vehiculo bus3 = new Autobus("B3", "Scania", "Citywide", 2022, 220.0, 40);
 
         //Añadir a la flota
-        admin.añadirVehiculo(auto1);
-        admin.añadirVehiculo(auto2);
-        admin.añadirVehiculo(auto3);
+        admin.aniadirVehiculo(auto1);
+        admin.aniadirVehiculo(auto2);
+        admin.aniadirVehiculo(auto3);
 
-        admin.añadirVehiculo(moto1);
-        admin.añadirVehiculo(moto2);
-        admin.añadirVehiculo(moto3);
-        admin.añadirVehiculo(moto4);
+        admin.aniadirVehiculo(moto1);
+        admin.aniadirVehiculo(moto2);
+        admin.aniadirVehiculo(moto3);
+        admin.aniadirVehiculo(moto4);
 
-        admin.añadirVehiculo(cam1);
-        admin.añadirVehiculo(cam2);
-        admin.añadirVehiculo(cam3);
+        admin.aniadirVehiculo(cam1);
+        admin.aniadirVehiculo(cam2);
+        admin.aniadirVehiculo(cam3);
 
-        admin.añadirVehiculo(bus1);
-        admin.añadirVehiculo(bus2);
-        admin.añadirVehiculo(bus3);
+        admin.aniadirVehiculo(bus1);
+        admin.aniadirVehiculo(bus2);
+        admin.aniadirVehiculo(bus3);
 
         //Clientes de prueba
         Cliente cliente1 = new Cliente("C1", "Melissa");
